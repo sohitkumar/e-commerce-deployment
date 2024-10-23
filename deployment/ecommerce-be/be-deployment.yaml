@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: ecommerce-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecommerce-be
+  template:
+    metadata:
+      labels:
+        app: ecommerce-be
+    spec:
+      containers:
+        - name: ecommerce-be
+          image: sohit28/ecommerce-be
+          resources:
+            requests:
+              cpu: "100m" # Minimal CPU request to satisfy HPA requirements
+            limits:
+              cpu: "500m" # Limit to 500 millicores of CPU
+          ports:
+            - containerPort: 8000
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: backend-config
+            - secretRef:
+                name: backend-secret

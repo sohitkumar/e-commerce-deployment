@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: ecommerce-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecommerce-fe
+  template:
+    metadata:
+      labels:
+        app: ecommerce-fe
+    spec:
+      containers:
+        - name: ecommerce-fe
+          image: sohit28/ecommerce-fe
+          resources:
+            requests:
+              cpu: "100m" # Minimal CPU request to satisfy HPA requirements
+            limits:
+              cpu: "500m" # Limit to 500 millicores of CPU
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: frontend-config
